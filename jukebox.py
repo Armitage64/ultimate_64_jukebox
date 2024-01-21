@@ -23,7 +23,9 @@ playlist = '/home/armitage/retrobits/playlist.txt'
 
 # End of Configuration
 
-apiUrl = 'http://' + ultimateIP + '/v1/runners:sidplay'
+apiSidplay = 'http://' + ultimateIP + '/v1/runners:sidplay'
+apiReset = 'http://' + ultimateIP + '/v1/machine:reset'
+clearLine = '\x1b[2K'
 
 # Load and randomize the playlist
 sidFiles = open(playlist).read().splitlines()
@@ -50,10 +52,9 @@ for sidFile in sidFiles:
     print('\nPlaying ' + filePath[1] + ' (' + runTime.group(1) + ':' + runTime.group(2) + ')')
 
     # Make the REST API call to upload and play the next SID
-
     postReq = {"file": open(sidFile, 'rb')}
     try:
-        req = requests.post(apiUrl, files=postReq)
+        req = requests.post(apiSidplay, files=postReq)
         if(not(req.status_code >= 200 and req.status_code < 300)):
              print("REST API Error: " + str(req.status_code))
              continue
@@ -63,20 +64,29 @@ for sidFile in sidFiles:
         continue
 
     # Count down
-
     for timeLeft in range(seconds, 0, -1):
-        sys.stdout.write('\r')
-        sys.stdout.write('{:2d} seconds remaining.'.format(timeLeft))
+        sys.stdout.write('\r{:2d} seconds remaining.'.format(timeLeft))
         sys.stdout.flush()
         time.sleep(1)
 
-    # Done, move to the next file
+    # Done with song
+    print(end=clearLine)
+    print('\rDone!')
+
+    # Reset the machine to stop playback
+    try:
+        req = requests.put(apiReset)
+
+    except requests.exceptions.RequestException as e:
+        print("Failure talking to Ultimate device: " + str(e))
+        continue
+
+    # End of loop, move on to the next file
 
 # Done with all files
-print("No more files to play, all done!")
+print("\nNo more files to play, calling it a day!")
 
 # TODO
-# Stop playback immediately when timer expires, then load next track
 # Re-randomize playlist and start again when reaching the end
 # Catch SIGINT and stop playback before exiting
 # Implement a key to skip to the next track
