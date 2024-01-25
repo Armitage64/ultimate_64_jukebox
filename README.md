@@ -17,8 +17,11 @@
 - Retro Bits on YouTube - https://youtube.com/retrobitstv
 
 ### TODO
-- Stop playback immediately when timer expires, then load next track
+- ~~Stop playback immediately when timer expires, then load next track~~
 - Re-randomize playlist and start again when reaching the end
 - Catch SIGINT and stop playback before exiting
 - Implement a key to skip to the next track
 - Error checking when loading playlist, retriving HVSC data, etc.
+- Implement a -r switch to enable randomization (default: off)
+- Implement a -p switch to specify a playlist file (default: playlist.txt)
+- Provide a way to use the entire HVSC archive as a playlist 
