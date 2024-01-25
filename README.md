@@ -22,3 +22,6 @@
 - Catch SIGINT and stop playback before exiting
 - Implement a key to skip to the next track
 - Error checking when loading playlist, retriving HVSC data, etc.
+- Implement a -r switch to enable randomization (default: off)
+- Implement a -p switch to specify a playlist file (default: playlist.txt)
+- Provide a way to use the entire HVSC archive as a playlist 
