@@ -85,9 +85,3 @@ for sidFile in sidFiles:
 
 # Done with all files
 print("\nNo more files to play, calling it a day!")
-
-# TODO
-# Re-randomize playlist and start again when reaching the end
-# Catch SIGINT and stop playback before exiting
-# Implement a key to skip to the next track
-# Error checking when loading playlist, retriving HVSC data, etc.
