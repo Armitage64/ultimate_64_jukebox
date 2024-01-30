@@ -20,9 +20,9 @@
 
 ### TODO
 - ~~Stop playback immediately when timer expires, then load next track~~
-- Re-randomize playlist and start again when reaching the end
 - ~~Catch SIGINT and stop playback before exiting~~
 - ~~Implement a key to skip to the next track~~
+- Re-randomize playlist and start again when reaching the end
 - Error checking when loading playlist, retriving HVSC data, etc.
 - If a .sid file isn't found in Songlengths.md5, display a warning and default to a sane (e.g. 300 sec) value
 - Implement a -r switch to enable randomization (default: off)
