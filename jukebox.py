@@ -6,12 +6,12 @@
 #
 # Note: this is just a proof of concept, there's minimal error checking!
 
-import requests, random, hashlib, pathlib, re, os, time, sys
+import requests, random, hashlib, pathlib, re, os, time, sys, signal
 
 # Configuration Starts Here
 
 # IP address of your Ultimate64 or UII+
-ultimateIP = '192.168.1.233'
+ultimateIP = '192.168.1.234'
 
 # Local path where you have unzipped High Voltage SID Collection
 # Download - https://www.hvsc.c64.org/
@@ -26,6 +26,24 @@ playlist = '/home/armitage/retrobits/playlist.txt'
 apiSidplay = 'http://' + ultimateIP + '/v1/runners:sidplay'
 apiReset = 'http://' + ultimateIP + '/v1/machine:reset'
 clearLine = '\x1b[2K'
+sigInt = False
+
+# Reset C64
+def resetMachine():
+    try:
+        req = requests.put(apiReset)
+        return True
+
+    except requests.exceptions.RequestException as e:
+        print("Failure talking to Ultimate device: " + str(e))
+        return False
+
+# Handle SIGINT (ctrl-c)
+def sigintHandler(signalNumber,frame):
+    global sigInt
+    sigInt = True
+
+signal.signal(signal.SIGINT,sigintHandler)
 
 # Load and randomize the playlist
 sidFiles = open(playlist).read().splitlines()
@@ -63,23 +81,38 @@ for sidFile in sidFiles:
         print("Failure talking to Ultimate device: " + str(e))
         continue
 
-    # Count down
+    # Count Down
     for timeLeft in range(seconds, 0, -1):
         sys.stdout.write('\r{:2d} seconds remaining.'.format(timeLeft))
         sys.stdout.flush()
-        time.sleep(1)
+
+        # Have we received a ctrl-c?
+        if (sigInt):
+            print(end=clearLine)
+            print('\rInterrupt Received, Skipping... (ctrl-c again to quit.)')
+            sigInt = False
+
+            # Sleep for 2 seconds to allow user to exit gracefully
+            time.sleep(2)
+            if (sigInt):
+                # Reset C64 and exit
+                print('Okay, bye!!!')
+                resetMachine()
+                sys.exit()
+            else:
+                # Skip to the next song
+                break
+
+        else:
+            # Sleep and continue the countdown
+            time.sleep(1)
 
     # Done with song
     print(end=clearLine)
     print('\rDone!')
 
     # Reset the machine to stop playback
-    try:
-        req = requests.put(apiReset)
-
-    except requests.exceptions.RequestException as e:
-        print("Failure talking to Ultimate device: " + str(e))
-        continue
+    resetMachine()
 
     # End of loop, move on to the next file
 
