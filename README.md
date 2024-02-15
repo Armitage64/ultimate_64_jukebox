@@ -5,13 +5,16 @@
 - Requires Ultimate Firmware 3.11 or higher
 - Uploads SID files directly to C64 and starts playing them in random order with a countdown timer
 
-### To Use
+### To Install
 - Download and unzip HVSC
 - Create a playlist.txt file containing the full path of the SIDs you want to play
 - Edit the configuration at the top of the jukebox.py script
 - Install requests module with `python3.8 -m pip install requests`
-- CTRL-C will skip to next song and optionally quit the player
 - Have fun!
+
+### To Use
+- Use `-p [filename]` argument to specify an alternate playlist from command line
+- CTRL-C will skip to next song and a second time will quit the player
 
 ### Resources
 - HVSC - https://www.hvsc.c64.org/
