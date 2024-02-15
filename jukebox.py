@@ -6,7 +6,7 @@
 #
 # Note: this is just a proof of concept, there's minimal error checking!
 
-import requests, random, hashlib, pathlib, re, os, time, sys, signal
+import requests, random, hashlib, pathlib, re, os, time, sys, signal, argparse
 
 # Configuration Starts Here
 
@@ -44,6 +44,18 @@ def sigintHandler(signalNumber,frame):
     sigInt = True
 
 signal.signal(signal.SIGINT,sigintHandler)
+
+# Parse arguments
+parser = argparse.ArgumentParser(
+        prog='jukebox',
+        description='SID jukebox for C64 Ultimate REST API',
+        epilog='Blame: Matthew R. Demicco')
+parser.add_argument('-p', '--playlist', help='Override default playlist.tx', action='store')
+args = parser.parse_args()
+
+# Are we using a custom playlist?
+if args.playlist:
+    playlist = args.playlist
 
 # Load and randomize the playlist
 sidFiles = open(playlist).read().splitlines()
@@ -96,7 +108,7 @@ for sidFile in sidFiles:
             time.sleep(2)
             if (sigInt):
                 # Reset C64 and exit
-                print('Okay, bye!!!')
+                print('\rOkay, bye!!!')
                 resetMachine()
                 sys.exit()
             else:
