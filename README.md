@@ -7,7 +7,7 @@
 
 ### To Install
 - Download and unzip HVSC
-- Create a playlist.txt file containing the full path of the SIDs you want to play
+- Create a playlist.txt file containing the full path of the SIDs you want to play<br/>(protip: ```find /path/to/C64MUSIC -name "*2SID*.sid" > playlist.txt```)
 - Edit the configuration at the top of the jukebox.py script
 - Install requests module with `python3.8 -m pip install requests`
 - Have fun!
